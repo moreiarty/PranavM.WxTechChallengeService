@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PranavM.WxTechChallengeService.WebApi", "PranavM.WxTechChallengeService.WebApi\PranavM.WxTechChallengeService.WebApi.csproj", "{F6478887-F684-4EED-9B62-B33BA2ACCEEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors", "PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors\PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors.csproj", "{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{F6478887-F684-4EED-9B62-B33BA2ACCEEE}.Release|x64.Build.0 = Release|Any CPU
 		{F6478887-F684-4EED-9B62-B33BA2ACCEEE}.Release|x86.ActiveCfg = Release|Any CPU
 		{F6478887-F684-4EED-9B62-B33BA2ACCEEE}.Release|x86.Build.0 = Release|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Debug|x64.Build.0 = Debug|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Debug|x86.Build.0 = Debug|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Release|x64.ActiveCfg = Release|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Release|x64.Build.0 = Release|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Release|x86.ActiveCfg = Release|Any CPU
+		{4CA6D6A9-A8E3-48DA-9E3F-D3C8B51A1958}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

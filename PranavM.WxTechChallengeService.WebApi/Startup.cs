@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PranavM.WxTechChallengeService.WebApi.Controllers.Implementation;
 
 namespace PranavM.WxTechChallengeService.WebApi
 {
@@ -26,6 +27,7 @@ namespace PranavM.WxTechChallengeService.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IWxTechChallengeController, WxTechChallengeControllerImplementation>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,8 +37,6 @@ namespace PranavM.WxTechChallengeService.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
