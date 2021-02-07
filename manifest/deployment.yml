@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: wxtechchallengesvc-deployment
+    labels:
+        app: wxtechchallengesvc
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: wxtechchallengesvc
+    template: 
+        metadata:
+            labels:
+                app: wxtechchallengesvc
+        spec:
+            containers:
+            - name: wxtechchallengesvc-container
+              image: pranavmwxtechchallengeregistry.azurecr.io/wxtechchallengesvc:v1
+              resources:
+                limits:
+                    memory: "128Mi"
+                    cpu: "500m"
+              ports:
+              - containerPort: 80
