@@ -5,9 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSwag.MSBuild" Version="13.0.2">
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.10.2" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.5.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors\PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors.csproj" />
+  </ItemGroup>
+
+  <Target Name="NSwag" AfterTargets="Build">
+    <Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
+    <Exec Command="$(NSwagExe_Core31) run ../nSwag/wxtechchallengeservice.webapi.nswag.json /variables:Configuration=$(Configuration),OutDir=$(OutDir)" />
+    <RemoveDir Directories="$(OutDir)References" />
+  </Target>
 </Project>

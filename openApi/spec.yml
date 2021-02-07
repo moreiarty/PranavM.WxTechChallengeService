@@ -1,0 +1,128 @@
+openapi: 3.0.1
+info: 
+  title: WooliesX Tech Challenge Submission
+  description: Submission for the WooliesX Dev Challenge
+  contact:
+    name: Pranav More
+    email: pranavmore97@gmail.com
+  version: 0.0.1
+tags:
+  - name: products
+    description: Operations related to products
+  - name: users
+    description: Operations related to users
+  - name: trolleys
+    description: Operations related to trolleys
+paths:
+  /user:
+    get:
+      summary: Retrieve user details
+      parameters:
+        - $ref: '#/components/parameters/trackingId'
+      operationId: GetUser
+      tags:
+        - users
+      responses:
+        "200":
+          description: User details
+          content:
+            application/vnd+api.json:
+              schema:
+                $ref: "#/components/schemas/GetUserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  # Common Parameters
+  parameters:
+    trackingId:
+      in: header
+      name: X-Tracking-Id
+      description: Identifier used to track a request end-to-end
+      schema:
+        type: string
+        pattern: '^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$'
+      required: false
+
+  responses:
+    # Potential Error Responses
+    BadRequest:
+      description: The request was invalid in some way
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorResponse"
+            example:
+              errors:
+                - status: 400
+                  source: 
+                    pointer: "/data/attributes/xyz"
+                  title: "Invalid Attribute"
+                  detail: "The details provided were not valid"
+    InternalServerError:
+      description: Something went wrong processing the request
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorResponse"
+            example:
+              errors:
+                - status: 500
+                  title: "Internal Server Error"
+                  detail: "Something went wrong processing the request. Please contact the support team"
+
+  # Request/Response Schemas
+  schemas:
+    GetUserResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: The name of the user
+        token:
+          type: string
+          description: The token for the user
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        errors:
+          type: array
+          description: "Contains one or more errors for the requested operation"
+          items:
+            $ref: "#/components/schemas/ErrorDetail"   
+    ErrorDetail:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - title
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: "The HTTP Status code for this error"
+          example: 400
+          minimum: 400
+          maximum: 599
+        source:
+          type: object
+          additionalProperties: false
+          properties:
+            pointer:
+              type: string
+              description: "Describes the path in the request body that caused the error"
+              example: "/data/attributes/productId"
+        title:
+          type: string
+          description: "A title briefly describing the error"
+          example: "Invalid attribute"
+        detail:
+          type: string
+          description: "Describes the error in detail (this specific instance of the problem)"
+          example: "Product Id was too long"
