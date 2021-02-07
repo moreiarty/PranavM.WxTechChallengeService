@@ -16,7 +16,8 @@ spec:
         spec:
             containers:
             - name: wxtechchallengesvc-container
-              image: pranavmwxtechchallengeregistry.azurecr.io/wxtechchallengesvc:v1
+              image: pranavmwxtechchallengeregistry.azurecr.io/wxtechchallengesvc:latest
+              imagePullPolicy: Always
               resources:
                 limits:
                     memory: "128Mi"
