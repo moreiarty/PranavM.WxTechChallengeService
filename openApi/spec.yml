@@ -33,6 +33,36 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /sort:
+    get:
+      summary: Retrieve user details
+      parameters:
+        - $ref: '#/components/parameters/trackingId'
+        - in: query
+          name: sortOption
+          schema:
+            type: string
+            enum:
+              - "Low"
+              - "High"
+              - "Ascending"
+              - "Descending"
+              - "Recommended"
+          description: The numbers of items to return
+      operationId: SortProducts
+      tags:
+        - users
+      responses:
+        "200":
+          description: User details
+          content:
+            application/vnd+api.json:
+              schema:
+                $ref: "#/components/schemas/SortProductsResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   # Common Parameters
@@ -87,6 +117,27 @@ components:
         token:
           type: string
           description: The token for the user
+
+    SortProductsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Product"
+      
+    Product:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: The name of the product
+        price:
+          type: number
+          format: decimal
+          description: The price of the product
+        quantity:
+          type: integer
+          description: The quantity of the product available
+
     ErrorResponse:
       type: object
       additionalProperties: false

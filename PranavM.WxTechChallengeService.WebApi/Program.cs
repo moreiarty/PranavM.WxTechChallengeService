@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Json;
 
 namespace PranavM.WxTechChallengeService.WebApi
 {
@@ -13,6 +16,12 @@ namespace PranavM.WxTechChallengeService.WebApi
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .WriteTo.Console(new JsonFormatter())
+                .CreateLogger();
+            
             CreateHostBuilder(args).Build().Run();
         }
 
