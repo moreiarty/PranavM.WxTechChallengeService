@@ -22,6 +22,12 @@ namespace PranavM.WxTechChallengeService.WebApi
         /// <returns>User details</returns>
         System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GetUserResponse>> GetUserAsync(string x_Tracking_Id = null);
     
+        /// <summary>Retrieve user details</summary>
+        /// <param name="x_Tracking_Id">Identifier used to track a request end-to-end</param>
+        /// <param name="sortOption">The numbers of items to return</param>
+        /// <returns>User details</returns>
+        System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<System.Collections.Generic.ICollection<Product>>> SortProductsAsync(string x_Tracking_Id = null, SortOption? sortOption = null);
+    
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.5.0.0 (NJsonSchema v10.1.15.0 (Newtonsoft.Json v12.0.0.0))")]
@@ -43,6 +49,16 @@ namespace PranavM.WxTechChallengeService.WebApi
             return _implementation.GetUserAsync(x_Tracking_Id);
         }
     
+        /// <summary>Retrieve user details</summary>
+        /// <param name="x_Tracking_Id">Identifier used to track a request end-to-end</param>
+        /// <param name="sortOption">The numbers of items to return</param>
+        /// <returns>User details</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("sort")]
+        public System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<System.Collections.Generic.ICollection<Product>>> SortProducts([Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-Tracking-Id")] string x_Tracking_Id = null, [Microsoft.AspNetCore.Mvc.FromQuery] SortOption? sortOption = null)
+        {
+            return _implementation.SortProductsAsync(x_Tracking_Id, sortOption);
+        }
+    
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
@@ -55,6 +71,30 @@ namespace PranavM.WxTechChallengeService.WebApi
         /// <summary>The token for the user</summary>
         [Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Token { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class SortProductsResponse : System.Collections.ObjectModel.Collection<Product>
+    {
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class Product 
+    {
+        /// <summary>The name of the product</summary>
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; }
+    
+        /// <summary>The price of the product</summary>
+        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal Price { get; set; }
+    
+        /// <summary>The quantity of the product available</summary>
+        [Newtonsoft.Json.JsonProperty("quantity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Quantity { get; set; }
     
     
     }
@@ -89,6 +129,26 @@ namespace PranavM.WxTechChallengeService.WebApi
         [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Detail { get; set; }
     
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
+    public enum SortOption
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"Low")]
+        Low = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"High")]
+        High = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Ascending")]
+        Ascending = 2,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Descending")]
+        Descending = 3,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Recommended")]
+        Recommended = 4,
     
     }
     
