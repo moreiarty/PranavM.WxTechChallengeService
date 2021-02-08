@@ -33,6 +33,25 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /sort:
+    get:
+      summary: Retrieve user details
+      parameters:
+        - $ref: '#/components/parameters/trackingId'
+      operationId: GetUser
+      tags:
+        - users
+      responses:
+        "200":
+          description: User details
+          content:
+            application/vnd+api.json:
+              schema:
+                $ref: "#/components/schemas/GetUserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   # Common Parameters
