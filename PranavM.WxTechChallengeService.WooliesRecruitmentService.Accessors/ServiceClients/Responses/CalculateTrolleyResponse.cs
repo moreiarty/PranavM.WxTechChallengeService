@@ -2,6 +2,6 @@ namespace PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors.Ser
 {
     public class CalculateTrolleyResponse
     {
-        
+
     }
 }
