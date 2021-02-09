@@ -22,11 +22,17 @@ namespace PranavM.WxTechChallengeService.WebApi
         /// <returns>User details</returns>
         System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GetUserResponse>> GetUserAsync(string x_Tracking_Id = null);
     
-        /// <summary>Retrieve user details</summary>
+        /// <summary>Retrieve sorted product data</summary>
         /// <param name="x_Tracking_Id">Identifier used to track a request end-to-end</param>
-        /// <param name="sortOption">The numbers of items to return</param>
-        /// <returns>User details</returns>
+        /// <param name="sortOption">Criteria to sort by</param>
+        /// <returns>Product data</returns>
         System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<System.Collections.Generic.ICollection<Product>>> SortProductsAsync(string x_Tracking_Id = null, SortOption? sortOption = null);
+    
+        /// <summary>Calculate trolley total given products, specials and quantities</summary>
+        /// <param name="body">Request body with products, specials and quantities</param>
+        /// <param name="x_Tracking_Id">Identifier used to track a request end-to-end</param>
+        /// <returns>User details</returns>
+        System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<float>> CalculateTrolleyTotalAsync(TrolleyTotalRequest body, string x_Tracking_Id = null);
     
     }
     
@@ -49,14 +55,24 @@ namespace PranavM.WxTechChallengeService.WebApi
             return _implementation.GetUserAsync(x_Tracking_Id);
         }
     
-        /// <summary>Retrieve user details</summary>
+        /// <summary>Retrieve sorted product data</summary>
         /// <param name="x_Tracking_Id">Identifier used to track a request end-to-end</param>
-        /// <param name="sortOption">The numbers of items to return</param>
-        /// <returns>User details</returns>
+        /// <param name="sortOption">Criteria to sort by</param>
+        /// <returns>Product data</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("sort")]
         public System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<System.Collections.Generic.ICollection<Product>>> SortProducts([Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-Tracking-Id")] string x_Tracking_Id = null, [Microsoft.AspNetCore.Mvc.FromQuery] SortOption? sortOption = null)
         {
             return _implementation.SortProductsAsync(x_Tracking_Id, sortOption);
+        }
+    
+        /// <summary>Calculate trolley total given products, specials and quantities</summary>
+        /// <param name="body">Request body with products, specials and quantities</param>
+        /// <param name="x_Tracking_Id">Identifier used to track a request end-to-end</param>
+        /// <returns>User details</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("trolleyTotal")]
+        public System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<float>> CalculateTrolleyTotal([Microsoft.AspNetCore.Mvc.FromBody] TrolleyTotalRequest body, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-Tracking-Id")] string x_Tracking_Id = null)
+        {
+            return _implementation.CalculateTrolleyTotalAsync(body, x_Tracking_Id);
         }
     
     }
@@ -94,6 +110,63 @@ namespace PranavM.WxTechChallengeService.WebApi
     
         /// <summary>The quantity of the product available</summary>
         [Newtonsoft.Json.JsonProperty("quantity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Quantity { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class TrolleyTotalRequest 
+    {
+        [Newtonsoft.Json.JsonProperty("products", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.List<TrolleyProduct> Products { get; set; } = new System.Collections.Generic.List<TrolleyProduct>();
+    
+        [Newtonsoft.Json.JsonProperty("specials", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.List<TrolleySpecial> Specials { get; set; } = new System.Collections.Generic.List<TrolleySpecial>();
+    
+        [Newtonsoft.Json.JsonProperty("quantities", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.List<TrolleyQuantity> Quantities { get; set; } = new System.Collections.Generic.List<TrolleyQuantity>();
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class TrolleyProduct 
+    {
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Name { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.Always)]
+        public float Price { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class TrolleySpecial 
+    {
+        [Newtonsoft.Json.JsonProperty("quantities", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.List<TrolleyQuantity> Quantities { get; set; } = new System.Collections.Generic.List<TrolleyQuantity>();
+    
+        [Newtonsoft.Json.JsonProperty("total", Required = Newtonsoft.Json.Required.Always)]
+        public float Total { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class TrolleyQuantity 
+    {
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Name { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("quantity", Required = Newtonsoft.Json.Required.Always)]
         public int Quantity { get; set; }
     
     

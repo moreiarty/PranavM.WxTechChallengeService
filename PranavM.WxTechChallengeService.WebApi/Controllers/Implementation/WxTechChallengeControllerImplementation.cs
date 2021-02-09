@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PranavM.WxTechChallengeService.WebApi.Utilities.Helpers;
 using PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors.ServiceClients.Interfaces;
+using PranavM.WxTechChallengeService.WooliesRecruitmentService.Accessors.ServiceClients.Requests;
 
 namespace PranavM.WxTechChallengeService.WebApi.Controllers.Implementation
 {
@@ -28,6 +29,35 @@ namespace PranavM.WxTechChallengeService.WebApi.Controllers.Implementation
             _wooliesRecruitmentTrolleyClient = wooliesRecruitmentTrolleyClient;
         }
 
+        public async Task<ActionResult<float>> CalculateTrolleyTotalAsync(TrolleyTotalRequest body, string x_Tracking_Id = null)
+        {
+            var clientRequest = new CalculateTrolleyRequest 
+            {
+                Products = body.Products.Select(p => new CalculateTrolleyRequestProduct
+                    {
+                        Name = p.Name,
+                        Price = (decimal)p.Price
+                    }).ToList(),
+                Quantities = body.Quantities.Select(q => new CalculateTrolleyRequestQuantity
+                    {
+                        Name = q.Name,
+                        Quantity = q.Quantity
+                    }).ToList(),
+                Specials = body.Specials.Select(s => new CalculateTrolleyRequestSpecial
+                    {
+                        Quantities = s.Quantities.Select(q => new CalculateTrolleyRequestQuantity
+                            {
+                                Name = q.Name,
+                                Quantity = q.Quantity
+                            }).ToList(),
+                        Total = (decimal)s.Total
+                    }).ToList()
+            };
+
+            var lowestTrolleyTotal = await _wooliesRecruitmentTrolleyClient.CalculateTrolleyTotal(clientRequest);
+            return ((float)lowestTrolleyTotal).ToJsonApiOKResponse();
+        }
+
         public async Task<ActionResult<GetUserResponse>> GetUserAsync(string x_Tracking_Id = null)
         {
             var response = new GetUserResponse
@@ -41,7 +71,46 @@ namespace PranavM.WxTechChallengeService.WebApi.Controllers.Implementation
 
         public async Task<ActionResult<ICollection<Product>>> SortProductsAsync(string x_Tracking_Id = null, SortOption? sortOption = null)
         {
-            var products = await _wooliesRecruitmentProductsClient.GetProductsAsync();
+            var products = new List<Product>(); 
+            
+            if (sortOption == null || sortOption != SortOption.Recommended)
+            {
+                products = (await _wooliesRecruitmentProductsClient.GetProductsAsync())
+                    .Select(product => new Product
+                    {
+                        Name = product.Name,
+                        Price = product.Price,
+                        Quantity = (int)product.Quantity
+                    })
+                    .ToList();
+            }
+            else
+            {
+                var shopperHistories = await _wooliesRecruitmentShopperHistoryClient.GetShopperHistory();
+                foreach (var shopperHistory in shopperHistories)
+                {   
+                    foreach(var boughtProduct in shopperHistory.Products)
+                    {
+                        var matchingProduct = products
+                            .Where(p => p.Name == boughtProduct.Name)
+                            .FirstOrDefault();
+                        if (matchingProduct == null)
+                        {
+                            products.Add(new Product
+                                {
+                                    Name = boughtProduct.Name,
+                                    Price = boughtProduct.Price,
+                                    Quantity = (int)boughtProduct.Quantity
+                                });
+                        }
+                        else
+                        {
+                            matchingProduct.Quantity += (int)boughtProduct.Quantity;
+                        }
+                    }
+                }
+            }
+
             if (sortOption != null)
             {
                 switch (sortOption)
@@ -59,46 +128,15 @@ namespace PranavM.WxTechChallengeService.WebApi.Controllers.Implementation
                         products = products.OrderByDescending(p => p.Name).ToList();
                         break;
                     case SortOption.Recommended:
-                        var shopperHistory = await _wooliesRecruitmentShopperHistoryClient.GetShopperHistory();
-                        var distinctProductsWithSummedQuantity = new List<Product>();
-                        foreach (var customerShopperHistory in shopperHistory)
-                        {   
-                            foreach(var product in customerShopperHistory.Products)
-                            {
-                                var matchingProduct = distinctProductsWithSummedQuantity
-                                    .Where(p => p.Name == product.Name)
-                                    .FirstOrDefault();
-                                if (matchingProduct == null)
-                                {
-                                    distinctProductsWithSummedQuantity.Add(new Product
-                                        {
-                                            Name = product.Name,
-                                            Price = product.Price,
-                                            Quantity = (int)product.Quantity
-                                        });
-                                }
-                                else
-                                {
-                                    matchingProduct.Quantity += (int)product.Quantity;
-                                }
-                            }
-                        }
-                        return distinctProductsWithSummedQuantity
+                        products = products
                             .OrderByDescending(product => product.Quantity)
-                            .ToList()
-                            .ToJsonApiOKResponse();
+                            .ToList();
+                        break;
                     default: break;
                 }
             }
-            return products
-                .Select(product => new Product
-                {
-                    Name = product.Name,
-                    Price = product.Price,
-                    Quantity = (int)product.Quantity
-                })
-                .ToList()
-                .ToJsonApiOKResponse();
+
+            return products.ToJsonApiOKResponse();
         }
     }
 }

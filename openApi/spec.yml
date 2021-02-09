@@ -35,7 +35,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
   /sort:
     get:
-      summary: Retrieve user details
+      summary: Retrieve sorted product data
       parameters:
         - $ref: '#/components/parameters/trackingId'
         - in: query
@@ -48,17 +48,44 @@ paths:
               - "Ascending"
               - "Descending"
               - "Recommended"
-          description: The numbers of items to return
+          description: Criteria to sort by
       operationId: SortProducts
       tags:
         - users
+      responses:
+        "200":
+          description: Product data
+          content:
+            application/vnd+api.json:
+              schema:
+                $ref: "#/components/schemas/SortProductsResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /trolleyTotal:
+    post:
+      summary: Calculate trolley total given products, specials and quantities
+      parameters:
+        - $ref: '#/components/parameters/trackingId'
+      operationId: CalculateTrolleyTotal
+      tags:
+        - users
+      requestBody:
+        description: Request body with products, specials and quantities
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: "#/components/schemas/TrolleyTotalRequest"
       responses:
         "200":
           description: User details
           content:
             application/vnd+api.json:
               schema:
-                $ref: "#/components/schemas/SortProductsResponse"
+                type: number
+                format: float
         "400":
           $ref: "#/components/responses/BadRequest"
         "500":
@@ -137,6 +164,67 @@ components:
         quantity:
           type: integer
           description: The quantity of the product available
+
+    TrolleyTotalRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - products
+        - specials
+        - quantities
+      properties:
+        products: 
+          type: array
+          items:
+            $ref: "#/components/schemas/TrolleyProduct"
+        specials:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrolleySpecial"
+        quantities:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrolleyQuantity"
+    
+    TrolleyProduct:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - price
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+
+    TrolleySpecial:
+      type: object
+      additionalProperties: false
+      required:
+        - quantities
+        - total
+      properties: 
+        quantities:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrolleyQuantity"
+        total:
+          type: number
+          format: float
+
+    TrolleyQuantity:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - quantity
+      properties:
+        name:
+          type: string
+        quantity: 
+          type: integer
 
     ErrorResponse:
       type: object
